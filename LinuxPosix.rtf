@@ -37,7 +37,7 @@ int main() \{\
     fileDesc = open(filePath, O_RDONLY);\
     if (fileDesc < 0) \{\
         perror("Error opening file for reading");\
-        return 1;\
+        return 1;\w
     \}\
 \
     bytesRead = read(fileDesc, buffer, sizeof(buffer) - 1);\
