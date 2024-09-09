@@ -1,0 +1,64 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 #include <fcntl.h>\
+#include <unistd.h>\
+#include <stdio.h>\
+#include <string.h>\
+\
+int main() \{\
+    int fileDesc;\
+    ssize_t bytesWritten, bytesRead;\
+    char buffer[256];\
+    const char *filePath = "example_file.txt";\
+    \
+    // Create and write to the file\
+    fileDesc = open(filePath, O_WRONLY | O_CREAT | O_TRUNC, 0644);\
+    if (fileDesc < 0) \{\
+        perror("Error creating file");\
+        return 1;\
+    \}\
+\
+    const char *dataToWrite = "Hello, this is a test file.\\nIt contains multiple lines of text.";\
+    bytesWritten = write(fileDesc, dataToWrite, strlen(dataToWrite));\
+    if (bytesWritten < 0) \{\
+        perror("Error writing to file");\
+        close(fileDesc);\
+        return 1;\
+    \}\
+\
+    close(fileDesc);\
+    \
+    // Read from the file\
+    fileDesc = open(filePath, O_RDONLY);\
+    if (fileDesc < 0) \{\
+        perror("Error opening file for reading");\
+        return 1;\
+    \}\
+\
+    bytesRead = read(fileDesc, buffer, sizeof(buffer) - 1);\
+    if (bytesRead < 0) \{\
+        perror("Error reading from file");\
+        close(fileDesc);\
+        return 1;\
+    \}\
+\
+    buffer[bytesRead] = '\\0'; // Null-terminate the string\
+    printf("File Content:\\n%s\\n", buffer);\
+\
+    close(fileDesc);\
+\
+    // Delete the file\
+    if (remove(filePath) != 0) \{\
+        perror("Error deleting file");\
+        return 1;\
+    \}\
+    printf("File %s deleted.\\n", filePath);\
+\
+    return 0;\
+\}\
+}
