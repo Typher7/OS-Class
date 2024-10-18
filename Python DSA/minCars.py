@@ -10,3 +10,4 @@ def solution(persons, seats):
             return i + 1
     return 0
 print("Min cars: ", solution([2,3,4,2], [2,5,7,2]))
+
